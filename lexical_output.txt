@@ -1,32 +1,33 @@
 (AccMod , aam , 1 )
 (float ,464.65 , 1 )
 (intConst , 454 , 1 )
-(intConst , 667 , 1 )
-(charConst , v , 1 )
+Invalid DataType Numer 667a
+Invalid expression 667a
+(charConst ,  v  , 1 )
 (String_const , ghgh , 1 )
-(Open.Curvy , - , 1 )
+( { , - , 1 )
 (khlaa_cls , - , 2 )
-(Clse.Curvy , - , 4 )
-(charConst , S , 6 )
-(charConst , \\ , 6 )
-Undefined Char Constant \\ at line num 6
-
-Undefine escape Char Constant \W at line num 6
+(Identifier ,void, 3 )
+( } , - , 4 )
+Invalid expression "efd\"wewe@#@#@12"
+Invalid expression 's''\\''\\n'\w'
 (float ,23231.121 , 7 )
-(intConst , 12 , 7 )
-Undefined Constant term
-(Mod , % , 7 )
-(intConst , 12 , 8 )
+Invalid DataType Numer 12dsd.13
+Invalid expression 12dsd.13
+Invalid expression sd31_$
+(DIVMOD , % , 7 )
+Invalid expression ssd#
+(Identifier ,sdd, 7 )
+Invalid expression #dfdffdfsdsd1212
 (RO , > , 8 )
 (RO , >= , 8 )
 (RO , == , 8 )
-(EQ , = , 8 )
-(AND , && , 8 )
+( =, - , 8 )
+(&&, - , 8 )
 (OR , += , 8 )
 (INCDEC , ++ , 8 )
 (ADDSUB , + , 8 )
 (RO , == , 8 )
-(Open.Curvy , - , 8 )
-(Clse.Curvy , - , 9 )
-(MULDIV , * , 9 )
-(MULDIV , * , 9 )
+(intConst , 121 , 8 )
+(Identifier ,class, 8 )
+( { , - , 8 )
