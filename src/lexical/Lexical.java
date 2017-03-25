@@ -23,7 +23,7 @@ public class Lexical {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws FileNotFoundException, IOException {
+    public static void Start() throws FileNotFoundException, IOException {
         PrintWriter fileWriter = new PrintWriter(new BufferedWriter (new FileWriter("lexical_output.txt")));        
         
         Scanner bolReader = new Scanner (new BufferedReader (new FileReader("lexical.bol")));
@@ -220,7 +220,7 @@ public class Lexical {
                             break;
                         }
                         else{
-                            fileWriter.println("(DIVMOD , / , "+num+" )");
+                            fileWriter.println("(DIVMULL , / , "+num+" )");
                         }
                         continue;
                     }
@@ -231,7 +231,7 @@ public class Lexical {
                         i++;
                         }
                         else{
-                            fileWriter.println("(DIVMOD , % , "+num+" )");
+                            fileWriter.println("(MOD , % , "+num+" )");
                         }
                         continue;
                     }
@@ -286,6 +286,7 @@ public class Lexical {
                         case '=':
                         case '{':
                         case '}':    
+                        case '\'':
                             break;
                         case '-':
                         if (line.charAt(i+1) =='>'){
@@ -347,7 +348,7 @@ public class Lexical {
                     
                 
                 
-                if(temp.matches("[\"][a-z|A-Z|0-9|@|!|#|$|%}^|&}*|(|)]*[\"]")){
+                if(temp.matches("[\"][[a-z|A-Z|0-9|@|!|#|$|%}^|&}*|(|)]+[\\\"]]*[\"]")){
                     temp = temp.replace('\"', ' ');
                     temp = temp.trim();
                     fileWriter.println("(String_const , "+temp+" , "+num + " )");
@@ -780,15 +781,9 @@ public class Lexical {
         fileWriter.close();
         bolReader.close();
         
-        
-        
-        Scanner fileReader = new Scanner (new BufferedReader (new FileReader("lexical_output.txt")));
-        while(fileReader.hasNext()){
-            System.out.println(fileReader.nextLine());
-        }
-        fileReader.close();
 //        
     }
+    
     static boolean has(String temp){
         char[] t = temp.toCharArray();
         for(int j =0;j<temp.length() ; j++){

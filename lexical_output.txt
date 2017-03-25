@@ -3,19 +3,27 @@
 (intConst , 454 , 1 )
 Invalid DataType Numer 667a
 Invalid expression 667a
-(charConst ,  v  , 1 )
+Invalid expression 
+(Identifier ,v, 1 )
+Invalid expression 
 (String_const , ghgh , 1 )
 ( { , - , 1 )
 (khlaa_cls , - , 2 )
 (Identifier ,void, 3 )
 ( } , - , 4 )
 Invalid expression "efd\"wewe@#@#@12"
-Invalid expression 's''\\''\\n'\w'
+Invalid expression 
+(Identifier ,s, 6 )
+Invalid expression 
+Invalid expression \\
+Invalid expression 
+Invalid expression \\n
+Invalid expression \w
 (float ,23231.121 , 7 )
 Invalid DataType Numer 12dsd.13
 Invalid expression 12dsd.13
 Invalid expression sd31_$
-(DIVMOD , % , 7 )
+(MOD , % , 7 )
 Invalid expression ssd#
 (Identifier ,sdd, 7 )
 Invalid expression #dfdffdfsdsd1212
