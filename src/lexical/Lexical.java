@@ -236,7 +236,7 @@ public class Lexical {
                         continue;
                     }
                     if(line.charAt(i)==','){
-                        fileWriter.println("( , , - , "+num+" )");
+                        fileWriter.println("( comma , - , "+num+" )");
                         i++;
                         continue;
                     }

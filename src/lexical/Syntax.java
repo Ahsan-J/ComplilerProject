@@ -77,13 +77,24 @@ public class Syntax {
         return TS;
     }
     
+    static int i=0;
+    static Tokens [] TS;
+    static CFG grammer = new CFG();
+    
     public static void Start() throws FileNotFoundException{
-        Tokens [] TS = getTokens();
+        TS = getTokens();
         
     }
-    
-//    boolean jbtk(){
-//        if(TS[i])
-//        return false;
-//    }
+    public static void decl(){
+        if(grammer.DT(TS[i])){
+            i++;
+            if(grammer.ID(TS[i])){
+                i++;
+                if(grammer.M_ID(TS[i])){
+                    i++;
+                }
+            }
+        }
+    }
+
 }
