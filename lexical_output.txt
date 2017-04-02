@@ -1,41 +1,12 @@
-(AccMod , aam , 1 )
-(float ,464.65 , 1 )
-(intConst , 454 , 1 )
-Invalid DataType Numer 667a
-Invalid expression 667a
-Invalid expression 
-(Identifier ,v, 1 )
-Invalid expression 
-(String_const , ghgh , 1 )
+(shuru , - , 1 )
+( : , - , 1 )
 ( { , - , 1 )
-(khlaa_cls , - , 2 )
-(Identifier ,void, 3 )
-( } , - , 4 )
-Invalid expression "efd\"wewe@#@#@12"
-Invalid expression 
-(Identifier ,s, 6 )
-Invalid expression 
-Invalid expression \\
-Invalid expression 
-Invalid expression \\n
-Invalid expression \w
-(float ,23231.121 , 7 )
-Invalid DataType Numer 12dsd.13
-Invalid expression 12dsd.13
-Invalid expression sd31_$
-(MOD , % , 7 )
-Invalid expression ssd#
-(Identifier ,sdd, 7 )
-Invalid expression #dfdffdfsdsd1212
-(RO , > , 8 )
-(RO , >= , 8 )
-(RO , == , 8 )
-( =, - , 8 )
-(&&, - , 8 )
-(OR , += , 8 )
-(INCDEC , ++ , 8 )
-(ADDSUB , + , 8 )
-(RO , == , 8 )
-(intConst , 121 , 8 )
-(Identifier ,class, 8 )
-( { , - , 8 )
+(DT , int , 2 )
+(ID ,a, 2 )
+( =, - , 2 )
+(Exp , 5 , 2 )
+( =, - , 2 )
+(Exp , 23 , 2 )
+( ; , - , 2 )
+( } , - , 5 )
+(khatam , - , 5 )

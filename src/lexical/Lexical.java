@@ -39,38 +39,263 @@ public class Lexical {
             String line = bolReader.nextLine();
             int i=0;
             while(i<line.length()){
-                if(i<line.length()){
+                switch(line.charAt(i)){   
+                        case '.':
+                            if(has(temp)){
+                            if(fc.ID(temp)){
+                              fileWriter.println("(float ,"+temp+" , "+num + " )");
+                              temp = "";
+                               i++;
+                               continue;
+                            }
+                            }
+                            if(i<line.length()-1&&line.charAt(i+1)>='0'&&line.charAt(i+1)<='9'){
+                            temp = temp + line.charAt(i);
+                            i++;
+                            continue;
+                            }
+                        
+                        case ' ':
+                        case ',':
+                        case '<':
+                        case '>':
+                        case '[':
+                        case ']':
+                        case '!':
+                        case '=':
+                        case '{':
+                        case '}':    
+                        case '\'':
+                        case ';':
+                        case ':':
+                            break;
+                        case '-':
+                        if (line.charAt(i+1) =='>'){
+                            i++;
+                            break;    
+                        }
+                        break;
+                        case '|':
+                        if (line.charAt(i+1) =='|'){
+                         i++;
+                         break;
+                        }
+                        break;
+                        default:
+                            temp = temp + line.charAt(i);
+                            i++;
+                            if(!(i<line.length())){
+                                break;
+                            }
+                            continue;
+                    }
+                temp = temp.toLowerCase();
+                temp = temp.trim();
+//                System.out.println(temp);
+               
+                    
+//                    if(i<line.length()-1 && (line.charAt(i+1)>='0' && line.charAt(i+1)<='9')||line.charAt(i+1)=='.' ||line.charAt(i+1)=='e'){
+//                        
+//                        i++;
+//                        continue;
+//                    }
+                
+                if(!temp.isEmpty()&&temp.charAt(0)>='0'&&temp.charAt(0)<='9'){
+                    if(in.ID(temp)){
+                        fileWriter.println("(Exp , "+temp+" , "+num + " )");
+                        temp = "";
+                    }
+                    
+                    else if(fc.ID(temp)){
+                        fileWriter.println("(Exp ,"+temp+" , "+num + " )");
+                        temp = "";
+                        
+                    }
+                    else
+                    fileWriter.println("Invalid DataType Number "+temp);
+                }
+                
+                    if(ch.ID(temp)){
+                        temp = temp.replace('\'' , ' ');
+                        temp.trim();
+                        fileWriter.println("(Exp , "+temp+" , "+num + " )");
+                        temp = "";
+                        
+                    }
+                    
+                    
+                
+                
+                if(temp.matches("[\"][[a-z|A-Z|0-9|@|!|#|$|%}^|&}*|(|)]+[\\\"]]*[\"]")){
+                    temp = temp.replace('\"', ' ');
+                    temp = temp.trim();
+                    fileWriter.println("(Exp , "+temp+" , "+num + " )");
+                    temp = "";
+                    
+                }
+                if(id.ID(temp)){
+                    
+                    if(temp.equals("khlaa")){
+                    fileWriter.println("(khlaa , - , "+num + " )");
+                    temp = "";
+                }
+                    if(temp.equals("eham")){
+                        fileWriter.println("(eham , - , "+num+" )");
+                        temp = "";
+                        
+                    }
+                    if(temp.equals("int")||temp.equals("string")||temp.equals("float")||temp.equals("boolean")||temp.equals("char")){
+                        fileWriter.println("(DT , "+temp+" , "+num+" )");
+                        temp = "";
+                        
+                    }
+                    if(temp.equals("aam")||temp.equals("zati")||temp.equals("mehfuz")){
+                        fileWriter.println("(AccMod , "+temp+" , "+num+" )");
+                        temp = "";
+                    }
+                    if(temp.equals("naqsha")){
+                        fileWriter.println("(naqsha , - , "+num+" )");
+                        temp = "";
+                    }
+                    if(temp.equals("khyal")){
+                        fileWriter.println("khyal , - , "+num+" )");
+                        temp = "";
+                    }
+                    if(temp.equals("sakin")){
+                        fileWriter.println("(sakin , - , "+num+" )");
+                        temp = "";
+                    }
+                    if(temp.equals("ewaz")){
+                        fileWriter.println("(ewaz , - , "+num+" )");
+                        temp = "";
+                    }
+                    if(temp.equals("shuru")){
+                        fileWriter.println("(shuru , - , "+num+" )");
+                        temp = "";
+                    }
+                    if(temp.equals("khatam")){
+                        fileWriter.println("(khatam , - , "+num+" )");
+                        temp = "";
+                    }
+                    if(temp.equals("brhae")){
+                        fileWriter.println("(brhae , - , "+num+" )");
+                        temp = "";
+                    }
+                    if(temp.equals("kro")){
+                        fileWriter.println("(kro , - , "+num+" )");
+                        temp = "";
+                    }
+                    if(temp.equals("jbtk")){
+                        fileWriter.println("(jbtk , - , "+num+" )");
+                        temp = "";
+                    }
+                    if(temp.equals("isme")){
+                        fileWriter.println("(isme , - , "+num+" )");
+                        temp = "";
+                    }
+
+                    if(temp.equals("ye")){
+                        fileWriter.println("(ye , - , "+num+" )");
+                        temp = "";
+                    }
+                    if(temp.equals("lautao")){
+                        fileWriter.println("(lautao , - , "+num+" )");
+                        temp = "";
+                    }
+                    if(temp.equals("jehd")){
+                        fileWriter.println("(jehd , - , "+num+" )");
+                        temp = "";
+                    }
+                    if(temp.equals("pakro")){
+                        fileWriter.println("(pakro , - , "+num+" )");
+                        temp = "";
+                    }
+                    if(temp.equals("naya")){
+                        fileWriter.println("(naya , - , "+num+" )");
+                        temp = "";
+                    }
+                    if(temp.equals("brtr")){
+                        fileWriter.println("(brtr , - , "+num+" )");
+                        temp = "";
+                    }
+                    if(temp.equals("badlo")){
+                        fileWriter.println("(badlo , - , "+num+" )");
+                        temp = "";
+                    }
+                    if(temp.equals("warna")){
+                        fileWriter.println("(warna , - , "+num+" )");
+                        temp = "";
+                    }
+                    if(temp.equals("agr")){
+                        fileWriter.println("(agr , - , "+num+" )");
+                        temp = "";
+                    }
+
+                    if(temp.equals("warna-agr")){
+                        fileWriter.println("(warna-agr , - , "+num+" )");
+                        temp = "";
+                    }
+                    if(!temp.equals("")){
+                    fileWriter.println("(ID ,"+temp+", "+num+" )");
+                        temp = "";
+                    }
+//                      if(i<line.length()-1&&(line.charAt(i+1)>='a'&&line.charAt(i+1)<='z')||line.charAt(i+1)=='_'){
+//                        i++;
+//                        continue;
+//                    }
+//                    else{
+//                        fileWriter.println("(identifier ,"+temp+", "+num+" )");
+//                        temp="";
+//                        i++;
+//                        continue;
+//                    }
+                    
+                }
+                else{
+                    temp = temp.trim();
+                    if(!temp.equalsIgnoreCase(""))
+                    fileWriter.println("Invalid expression "+temp);
+                }
+               if(i<line.length()){
+                    
                     if(line.charAt(i)=='('){
                         fileWriter.println("( ( , - , "+num+" )");
+                        temp = "";
                         i++;
                         continue;
                     }
                     if(line.charAt(i)==')'){
                         fileWriter.println("( ) , - , "+num+" )");
+                        temp = "";
                         i++;
                         continue;
                     }
                     if(line.charAt(i)=='{'){
                         fileWriter.println("( { , - , "+num+" )");
+                        temp = "";
                         i++;
                         continue;
                     }
                     if(line.charAt(i)=='}'){
                         fileWriter.println("( } , - , "+num+" )");
+                        temp = "";
                         i++;
                         continue;
                     }
                     if(line.charAt(i)=='['){
                         fileWriter.println("( [ , - , "+num+" )");
+                        temp = "";
                         i++;
                         continue;
                     }
                     if(line.charAt(i)==']'){
                         fileWriter.println("( ] , - , "+num+" )");
+                        temp = "";
                         i++;
                         continue;
                     }
                     if(line.charAt(i)=='+'){
+                        temp = "";
                         i++;
                         if(line.charAt(i)=='+'){
                         fileWriter.println("(INCDEC , ++ , "+num+" )");
@@ -81,9 +306,10 @@ public class Lexical {
                         }
                         continue;
                     }
-                    if(line.charAt(i)=='/'){
+                    if(line.charAt(i)=='\\'){
+                        temp = "";
                         i++;
-                        if(line.charAt(i)=='/'){
+                        if(line.charAt(i)=='\\'){
                         temp = "";
                         num++;
                         break;
@@ -91,6 +317,7 @@ public class Lexical {
                         continue;
                     }
                     if(line.charAt(i)=='<'){
+                        temp = "";
                         i++;
                         if(line.charAt(i)=='='){
                         fileWriter.println("(RO , <= , "+num+" )");
@@ -129,6 +356,7 @@ public class Lexical {
                         continue;
                     }
                     if(line.charAt(i)=='>'){
+                        temp = "";
                         i++;
                         if(line.charAt(i)=='='){
                         fileWriter.println("(RO , >= , "+num+" )");
@@ -142,6 +370,7 @@ public class Lexical {
                     
                         
                     if(line.charAt(i)=='!'){
+                        temp = "";
                         i++;
                         if(line.charAt(i)=='='){
                         fileWriter.println("(RO , != , "+num+" )");
@@ -154,6 +383,7 @@ public class Lexical {
                     }
                     
                     if(line.charAt(i)=='&'){
+                        temp = "";
                         i++;
                         if(line.charAt(i)=='&'){
                         fileWriter.println("(&&, - , "+num+" )");
@@ -165,6 +395,7 @@ public class Lexical {
                         continue;
                     }
                     if(line.charAt(i)=='|'){
+                        temp = "";
                         i++;
                         if(line.charAt(i)=='|'){
                         fileWriter.println("(OR , += , "+num+" )");
@@ -176,6 +407,7 @@ public class Lexical {
                         continue;
                     }
                     if(line.charAt(i)=='='){
+                        temp = "";
                         i++;
                         if(line.charAt(i)=='='){
                         fileWriter.println("(RO , == , "+num+" )");
@@ -188,6 +420,7 @@ public class Lexical {
                     }
                     
                     if(line.charAt(i)=='+'){
+                        temp = "";
                         i++;
                         if(line.charAt(i)=='='){
                         fileWriter.println("(ASGN_OP , += , "+num+" )");
@@ -199,6 +432,7 @@ public class Lexical {
                         continue;
                     }
                     if(line.charAt(i)=='*'){
+                        temp = "";
                         i++;
                         if(i<line.length()&&line.charAt(i)=='='){
                         fileWriter.println("(ASGN_OP , *= , "+num+" )");
@@ -210,6 +444,7 @@ public class Lexical {
                         continue;
                     }
                     if(line.charAt(i)=='/'){
+                        temp = "";
                         i++;
                         if(line.charAt(i)=='='){
                         fileWriter.println("(ASGN_OP , /= , "+num+" )");
@@ -220,7 +455,7 @@ public class Lexical {
                             break;
                         }
                         else{
-                            fileWriter.println("(DIVMULL , / , "+num+" )");
+                            fileWriter.println("(DIVMOD , / , "+num+" )");
                         }
                         continue;
                     }
@@ -231,16 +466,28 @@ public class Lexical {
                         i++;
                         }
                         else{
-                            fileWriter.println("(MOD , % , "+num+" )");
+                            fileWriter.println("(DIVMOD , % , "+num+" )");
                         }
+                        continue;
+                    }
+                    if(line.charAt(i)==':'){
+                        fileWriter.println("( : , - , "+num+" )");
+                        i++;
+                        continue;
+                    }
+                    if(line.charAt(i)==';'){
+                        fileWriter.println("( ; , - , "+num+" )");
+                        i++;
                         continue;
                     }
                     if(line.charAt(i)==','){
                         fileWriter.println("( comma , - , "+num+" )");
+                        temp = "";
                         i++;
                         continue;
                     }
                     if(line.charAt(i)=='-'){
+                        temp = "";
                         i++;
                         if(line.charAt(i)=='>'){
                         fileWriter.println("( ->, - , "+num+" )");
@@ -259,506 +506,7 @@ public class Lexical {
                         }
                         continue;
                     }
-                }
-                switch(line.charAt(i)){   
-                        case '.':
-                            if(has(temp)){
-                            if(fc.ID(temp)){
-                              fileWriter.println("(float ,"+temp+" , "+num + " )");
-                              temp = "";
-                               i++;
-                               continue;
-                            }
-                            }
-                            if(i<line.length()-1&&line.charAt(i+1)>='0'&&line.charAt(i+1)<='9'){
-                            temp = temp + line.charAt(i);
-                            i++;
-                            continue;
-                            }
-                            
-                        case ' ':
-                        case ',':
-                        case '<':
-                        case '>':
-                        case '[':
-                        case ']':
-                        case '!':
-                        case '=':
-                        case '{':
-                        case '}':    
-                        case '\'':
-                            break;
-                        case '-':
-                        if (line.charAt(i+1) =='>'){
-                            i++;
-                            break;    
-                        }
-                        break;
-                        case '|':
-                        if (line.charAt(i+1) =='|'){
-                         i++;
-                         break;
-                        }
-                        break;
-                        default:
-                            temp = temp + line.charAt(i);
-                            i++;
-                            if(!(i<line.length())){
-                                break;
-                            }
-                            continue;
                     }
-                temp = temp.toLowerCase();
-                temp = temp.trim();
-//                System.out.println(temp);
-               
-                    
-//                    if(i<line.length()-1 && (line.charAt(i+1)>='0' && line.charAt(i+1)<='9')||line.charAt(i+1)=='.' ||line.charAt(i+1)=='e'){
-//                        
-//                        i++;
-//                        continue;
-//                    }
-                
-                if(!temp.isEmpty()&&temp.charAt(0)>='0'&&temp.charAt(0)<='9'){
-                    if(in.ID(temp)){
-                        fileWriter.println("(intConst , "+temp+" , "+num + " )");
-                        temp = "";
-                        i++;
-                        continue;
-                    }
-                    
-                    if(fc.ID(temp)){
-                        fileWriter.println("(float ,"+temp+" , "+num + " )");
-                        temp = "";
-                        i++;
-                        continue;
-                    }
-                    fileWriter.println("Invalid DataType Numer "+temp);
-                }
-                
-                    if(ch.ID(temp)){
-                        temp = temp.replace('\'' , ' ');
-                        temp.trim();
-                        fileWriter.println("(charConst , "+temp+" , "+num + " )");
-                        temp = "";
-                        i++;
-                        continue;
-                    }
-                    
-                    
-                
-                
-                if(temp.matches("[\"][[a-z|A-Z|0-9|@|!|#|$|%}^|&}*|(|)]+[\\\"]]*[\"]")){
-                    temp = temp.replace('\"', ' ');
-                    temp = temp.trim();
-                    fileWriter.println("(String_const , "+temp+" , "+num + " )");
-                    temp = "";
-                    i++;
-                    continue;
-                }
-                if(id.ID(temp)){
-                    
-                    if(temp.equals("khlaa")){
-                    fileWriter.println("(khlaa_cls , - , "+num + " )");
-                    temp = "";
-                    i++;
-                    continue;
-                }
-                    if(temp.equals("eham")){
-                        fileWriter.println("(eham_cls , - , "+num+" )");
-                        temp = "";
-                        i++;
-                        continue;
-                    }
-                    if(temp.equals("aam")){
-                        fileWriter.println("(AccMod , aam , "+num+" )");
-                        temp = "";
-                        i++;
-                        continue;
-                    }
-                    if(temp.equals("zati")){
-                        fileWriter.println("(AccMod , zati , "+num+" )");
-                        temp = "";
-                        i++;
-                        continue;
-                    }
-                    if(temp.equals("mehfuz")){
-                        fileWriter.println("(AccMod , mehfuz , "+num+" )");
-                        temp = "";
-                        i++;
-                        continue;
-                    }
-                    if(temp.equals("naqsha")){
-                        fileWriter.println("(naqsha_cls , - , "+num+" )");
-                        temp = "";
-                        i++;
-                        continue;
-                    }
-                    if(temp.equals("khyal")){
-                        fileWriter.println("khyal_cls , - , "+num+" )");
-                        temp = "";
-                        i++;
-                        continue;
-                    }
-                    if(temp.equals("sakin")){
-                        fileWriter.println("(sakin_cls , - , "+num+" )");
-                        temp = "";
-                        i++;
-                        continue;
-                    }
-                    if(temp.equals("ewaz")){
-                        fileWriter.println("(ewaz_cls , - , "+num+" )");
-                        temp = "";
-                        i++;
-                        continue;
-                    }
-                    if(temp.equals("brhae")){
-                        fileWriter.println("(brhae_cls , - , "+num+" )");
-                        temp = "";
-                        i++;
-                        continue;
-                    }
-                    if(temp.equals("kro")){
-                        fileWriter.println("(kro_cls , - , "+num+" )");
-                        temp = "";
-                        i++;
-                        continue;
-                    }
-                    if(temp.equals("jbtk")){
-                        fileWriter.println("(jbtk_cls , - , "+num+" )");
-                        temp = "";
-                        i++;
-                        continue;
-                    }
-                    if(temp.equals("isme")){
-                        fileWriter.println("(isme_cls , - , "+num+" )");
-                        temp = "";
-                        i++;
-                        continue;
-                    }
-
-                    if(temp.equals("ye")){
-                        fileWriter.println("(ye_cls , - , "+num+" )");
-                        temp = "";
-                        i++;
-                        continue;
-                    }
-                    if(temp.equals("lautao")){
-                        fileWriter.println("(lautao_cls , - , "+num+" )");
-                        temp = "";
-                        i++;
-                        continue;
-                    }
-                    if(temp.equals("jehd")){
-                        fileWriter.println("(jehd_cls , - , "+num+" )");
-                        temp = "";
-                        i++;
-                        continue;
-                    }
-                    if(temp.equals("pakro")){
-                        fileWriter.println("(pakro_cls , - , "+num+" )");
-                        temp = "";
-                        i++;
-                        continue;
-                    }
-                    if(temp.equals("naya")){
-                        fileWriter.println("(naya_cls , - , "+num+" )");
-                        temp = "";
-                        i++;
-                        continue;
-                    }
-                    if(temp.equals("brtr")){
-                        fileWriter.println("(brtr_cls , - , "+num+" )");
-                        temp = "";
-                        i++;
-                        continue;
-                    }
-                    if(temp.equals("badlo")){
-                        fileWriter.println("(badlo_cls , - , "+num+" )");
-                        temp = "";
-                        i++;
-                        continue;
-                    }
-                    if(temp.equals("warna")){
-                        fileWriter.println("(warna_cls , - , "+num+" )");
-                        temp = "";
-                        i++;
-                        continue;
-                    }
-                    if(temp.equals("agr")){
-                        fileWriter.println("(agr_cls , - , "+num+" )");
-                        temp = "";
-                        i++;
-                        continue;
-                    }
-
-                    if(temp.equals("warna-agr")){
-                        fileWriter.println("(warna-agr_cls , - , "+num+" )");
-                        temp = "";
-                        i++;
-                        continue;
-                    }
-                    fileWriter.println("(Identifier ,"+temp+", "+num+" )");
-                        temp = "";
-                        i++;
-                        continue;
-//                    if(i<line.length()-1&&(line.charAt(i+1)>='a'&&line.charAt(i+1)<='z')||line.charAt(i+1)=='_'){
-//                        i++;
-//                        continue;
-//                    }
-//                    else{
-//                        fileWriter.println("(identifier ,"+temp+", "+num+" )");
-//                        temp="";
-//                        i++;
-//                        continue;
-//                    }
-                    
-                }
-                else{
-                    fileWriter.println("Invalid expression "+temp);
-                }
-//               if(i<line.length()){
-//                    
-//                    if(line.charAt(i)=='('){
-//                        fileWriter.println("( ( , - , "+num+" )");
-//                        temp = "";
-//                        i++;
-//                        continue;
-//                    }
-//                    if(line.charAt(i)==')'){
-//                        fileWriter.println("( ) , - , "+num+" )");
-//                        temp = "";
-//                        i++;
-//                        continue;
-//                    }
-//                    if(line.charAt(i)=='{'){
-//                        fileWriter.println("( { , - , "+num+" )");
-//                        temp = "";
-//                        i++;
-//                        continue;
-//                    }
-//                    if(line.charAt(i)=='}'){
-//                        fileWriter.println("( } , - , "+num+" )");
-//                        temp = "";
-//                        i++;
-//                        continue;
-//                    }
-//                    if(line.charAt(i)=='['){
-//                        fileWriter.println("( [ , - , "+num+" )");
-//                        temp = "";
-//                        i++;
-//                        continue;
-//                    }
-//                    if(line.charAt(i)==']'){
-//                        fileWriter.println("( ] , - , "+num+" )");
-//                        temp = "";
-//                        i++;
-//                        continue;
-//                    }
-//                    if(line.charAt(i)=='+'){
-//                        temp = "";
-//                        i++;
-//                        if(line.charAt(i)=='+'){
-//                        fileWriter.println("(INCDEC , ++ , "+num+" )");
-//                        i++;
-//                        }
-//                        else{
-//                            fileWriter.println("(ADDSUB , + , "+num+" )");
-//                        }
-//                        continue;
-//                    }
-//                    if(line.charAt(i)=='\\'){
-//                        temp = "";
-//                        i++;
-//                        if(line.charAt(i)=='\\'){
-//                        temp = "";
-//                        num++;
-//                        break;
-//                        }
-//                        continue;
-//                    }
-//                    if(line.charAt(i)=='<'){
-//                        temp = "";
-//                        i++;
-//                        if(line.charAt(i)=='='){
-//                        fileWriter.println("(RO , <= , "+num+" )");
-//                        i++;
-//                        }
-//                        else if(line.charAt(i)=='-'){
-//                            i++;
-//                            if(line.charAt(i)=='-'){
-//                                boolean breaker=false;
-//                                do{
-//                                    while(i<line.length()){
-//                                        if(line.charAt(i)=='-'){
-//                                            i++;
-//                                            if(line.charAt(i)=='-'&&i<line.length()-1){
-//                                                i++;
-//                                                if(line.charAt(i)=='>'&&i<line.length()-2){
-//                                                    breaker=true;
-//                                                }
-//                                            }
-//                                        }
-//                                        i++;
-//                                    }
-//                                    if(bolReader.hasNext()){
-//                                        line=bolReader.nextLine();
-//                                    }
-//                                    else{
-//                                        breaker=true;
-//                                    }
-//                                }
-//                                while(breaker==false);
-//                            }
-//                        }
-//                        else{
-//                            fileWriter.println("(RO , < , "+num+" )");
-//                        }
-//                        continue;
-//                    }
-//                    if(line.charAt(i)=='>'){
-//                        temp = "";
-//                        i++;
-//                        if(line.charAt(i)=='='){
-//                        fileWriter.println("(RO , >= , "+num+" )");
-//                        i++;
-//                        }
-//                        else{
-//                            fileWriter.println("(RO , > , "+num+" )");
-//                        }
-//                        continue;
-//                    }
-//                    
-//                        
-//                    if(line.charAt(i)=='!'){
-//                        temp = "";
-//                        i++;
-//                        if(line.charAt(i)=='='){
-//                        fileWriter.println("(RO , != , "+num+" )");
-//                        i++;
-//                        }
-//                        else{
-//                            fileWriter.println("(! , - , "+num+" )");
-//                        }
-//                        continue;
-//                    }
-//                    
-//                    if(line.charAt(i)=='&'){
-//                        temp = "";
-//                        i++;
-//                        if(line.charAt(i)=='&'){
-//                        fileWriter.println("(&&, - , "+num+" )");
-//                        i++;
-//                        }
-//                        else{
-//                            fileWriter.println("(&, - , "+num+" )");
-//                        }
-//                        continue;
-//                    }
-//                    if(line.charAt(i)=='|'){
-//                        temp = "";
-//                        i++;
-//                        if(line.charAt(i)=='|'){
-//                        fileWriter.println("(OR , += , "+num+" )");
-//                        i++;
-//                        }
-//                        else{
-//                            fileWriter.println("(|, - , "+num+" )");
-//                        }
-//                        continue;
-//                    }
-//                    if(line.charAt(i)=='='){
-//                        temp = "";
-//                        i++;
-//                        if(line.charAt(i)=='='){
-//                        fileWriter.println("(RO , == , "+num+" )");
-//                        i++;
-//                        }
-//                        else{
-//                            fileWriter.println("( =, - , "+num+" )");
-//                        }
-//                        continue;
-//                    }
-//                    
-//                    if(line.charAt(i)=='+'){
-//                        temp = "";
-//                        i++;
-//                        if(line.charAt(i)=='='){
-//                        fileWriter.println("(ASGN_OP , += , "+num+" )");
-//                        i++;
-//                        }
-//                        else{
-//                            fileWriter.println("(ADDSUB , + , "+num+" )");
-//                        }
-//                        continue;
-//                    }
-//                    if(line.charAt(i)=='*'){
-//                        temp = "";
-//                        i++;
-//                        if(i<line.length()&&line.charAt(i)=='='){
-//                        fileWriter.println("(ASGN_OP , *= , "+num+" )");
-//                        i++;
-//                        }
-//                        else{
-//                            fileWriter.println("(*, - , "+num+" )");
-//                        }
-//                        continue;
-//                    }
-//                    if(line.charAt(i)=='/'){
-//                        temp = "";
-//                        i++;
-//                        if(line.charAt(i)=='='){
-//                        fileWriter.println("(ASGN_OP , /= , "+num+" )");
-//                        i++;
-//                        }
-//                        else if(line.charAt(i)=='/'){
-//                            
-//                            break;
-//                        }
-//                        else{
-//                            fileWriter.println("(DIVMOD , / , "+num+" )");
-//                        }
-//                        continue;
-//                    }
-//                    if(line.charAt(i)=='%'){
-//                        temp = "";
-//                        i++;
-//                        if(line.charAt(i)=='='){
-//                        fileWriter.println("(ASGN_OP , %= , "+num+" )");
-//                        i++;
-//                        }
-//                        else{
-//                            fileWriter.println("(DIVMOD , % , "+num+" )");
-//                        }
-//                        continue;
-//                    }
-//                    if(line.charAt(i)==','){
-//                        fileWriter.println("( , , - , "+num+" )");
-//                        temp = "";
-//                        i++;
-//                        continue;
-//                    }
-//                    if(line.charAt(i)=='-'){
-//                        temp = "";
-//                        i++;
-//                        if(line.charAt(i)=='>'){
-//                        fileWriter.println("( ->, - , "+num+" )");
-//                        i++;
-//                        }
-//                        else if(line.charAt(i)=='-'){
-//                        fileWriter.println("(INCDEC , -- , "+num+" )");
-//                        i++;
-//                        }
-//                        else if(line.charAt(i)=='='){
-//                        fileWriter.println("(ASGN_OP , -= , "+num+" )");
-//                        i++;
-//                        }
-//                        else{
-//                            fileWriter.println("(ADDSUB , - , "+num+" )");
-//                        }
-//                        continue;
-//                    }
-//                    }
                temp="";
                 i++;
             }

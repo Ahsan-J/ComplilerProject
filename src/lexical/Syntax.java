@@ -30,9 +30,11 @@ public class Syntax {
     }
     public static Tokens[] getTokens(){
         int filesize=0;
+        String filename = "lexical_output.txt";
+//        String filename = "lexical_output.txt";
         Tokens[] TS=null;
         try{
-        Scanner reader = new Scanner (new BufferedReader (new FileReader("lexical_output.txt")));
+        Scanner reader = new Scanner (new BufferedReader (new FileReader(filename)));
         String Line = null;
         while(reader.hasNext()){
             Line = reader.nextLine();
@@ -45,7 +47,7 @@ public class Syntax {
             }
         }
         reader.close();
-//            System.out.println(filesize);
+            System.out.println(filesize);
         }
         catch(Exception e){
             System.err.println("File Not Found \nError Says"+e.getMessage());
@@ -53,7 +55,7 @@ public class Syntax {
         TS = new Tokens[filesize];
         try{
             String Line = null;
-            Scanner reader = new Scanner (new BufferedReader (new FileReader("lexical_output.txt")));
+            Scanner reader = new Scanner (new BufferedReader (new FileReader(filename)));
             int indexSize=0;
             while(reader.hasNext()){
                 Line = reader.nextLine();
@@ -78,23 +80,87 @@ public class Syntax {
     }
     
     static int i=0;
-    static Tokens [] TS;
-    static CFG grammer = new CFG();
-    
+    static Tokens [] TS;   
+    static String value = new String();
     public static void Start() throws FileNotFoundException{
         TS = getTokens();
-        
-    }
-    public static void decl(){
-        if(grammer.DT(TS[i])){
-            i++;
-            if(grammer.ID(TS[i])){
-                i++;
-                if(grammer.M_ID(TS[i])){
+        while(i<TS.length){
+                if(TS[i].ClassPart.equalsIgnoreCase("shuru")){
                     i++;
+                    if(TS[i].ClassPart.equalsIgnoreCase(":")){
+                        i++;
+                        if(TS[i].ClassPart.equalsIgnoreCase("{")){
+                            i++;
+                            M_st();
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            if(TS[i].ClassPart.equalsIgnoreCase("}")){
+                                i++;
+                                if(TS[i].ClassPart.equalsIgnoreCase("khatam")){
+                                    System.out.println("Build Success");
+                                }
+                            }
+                        }
+                    }
+                }
+                else{
+                    System.out.println("Build Unsuccess");
+                }
+            i++;
+        }
+    }
+    public static boolean M_st(){
+        if(TS[i].ClassPart.equalsIgnoreCase("DT")){
+            if(decl()){
+                System.out.println(value + " Declared");
+            }
+            
+        }
+        
+        return false;
+    }
+    public static boolean decl(){
+        if(TS[i].ClassPart.equalsIgnoreCase("DT")){
+            value += TS[i].ValuePart;
+            i++;
+            if(TS[i].ClassPart.equalsIgnoreCase("ID")){
+                value += TS[i].ValuePart;
+                i++;
+                list();
+                if(TS[i].ClassPart.equalsIgnoreCase(";")){
+                    value += TS[i].ValuePart;
+                    return true;
                 }
             }
         }
+        return false;
     }
-
+    public static boolean list(){
+        if(TS[i].ClassPart.equalsIgnoreCase("comma")){
+            value += TS[i].ValuePart;
+            i++;
+            if(TS[i].ClassPart.equalsIgnoreCase("ID")){
+                value += TS[i].ValuePart;
+                i++;
+                list();
+                return true;
+            }
+        }
+        else if(TS[i].ClassPart.equalsIgnoreCase("=")){
+            value += TS[i].ValuePart;
+            i++;
+            if(TS[i].ClassPart.equalsIgnoreCase("Exp")){
+                value += TS[i].ValuePart;
+                i++;
+                list();
+                return true;
+            }
+        }
+        return false;
+    }
 }
