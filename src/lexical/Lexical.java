@@ -181,8 +181,8 @@ public class Lexical {
                         fileWriter.println("(brhae , - , "+num+" )");
                         temp = "";
                     }
-                    if(temp.equals("kro")){
-                        fileWriter.println("(kro , - , "+num+" )");
+                    if(temp.equals("karo")){
+                        fileWriter.println("(karo , - , "+num+" )");
                         temp = "";
                     }
                     if(temp.equals("jbtk")){
