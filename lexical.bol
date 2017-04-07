@@ -1,5 +1,5 @@
 shuru:{
-int a=23;
+int a=23+34;
 char b = 56;
 
 }khatam

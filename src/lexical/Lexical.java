@@ -43,7 +43,7 @@ public class Lexical {
                         case '.':
                             if(has(temp)){
                             if(fc.ID(temp)){
-                              fileWriter.println("(float ,"+temp+" , "+num + " )");
+                              fileWriter.println("(floatConst ,"+temp+" , "+num + " )");
                               temp = "";
                                i++;
                                continue;
@@ -54,12 +54,16 @@ public class Lexical {
                             i++;
                             continue;
                             }
-                        
+                        case ')':
+                        case '(':
                         case ' ':
                         case ',':
                         case '<':
+                        case '/':
+                        case '%':
                         case '>':
                         case '[':
+                        case '+':
                         case ']':
                         case '!':
                         case '=':
@@ -102,12 +106,12 @@ public class Lexical {
                 
                 if(!temp.isEmpty()&&temp.charAt(0)>='0'&&temp.charAt(0)<='9'){
                     if(in.ID(temp)){
-                        fileWriter.println("(Exp , "+temp+" , "+num + " )");
+                        fileWriter.println("(intConst , "+temp+" , "+num + " )");
                         temp = "";
                     }
                     
                     else if(fc.ID(temp)){
-                        fileWriter.println("(Exp ,"+temp+" , "+num + " )");
+                        fileWriter.println("(floatConst ,"+temp+" , "+num + " )");
                         temp = "";
                         
                     }
@@ -118,7 +122,7 @@ public class Lexical {
                     if(ch.ID(temp)){
                         temp = temp.replace('\'' , ' ');
                         temp.trim();
-                        fileWriter.println("(Exp , "+temp+" , "+num + " )");
+                        fileWriter.println("(charConst , "+temp+" , "+num + " )");
                         temp = "";
                         
                     }
@@ -129,14 +133,14 @@ public class Lexical {
                 if(temp.matches("[\"][[a-z|A-Z|0-9|@|!|#|$|%}^|&}*|(|)]+[\\\"]]*[\"]")){
                     temp = temp.replace('\"', ' ');
                     temp = temp.trim();
-                    fileWriter.println("(Exp , "+temp+" , "+num + " )");
+                    fileWriter.println("(stringConst , "+temp+" , "+num + " )");
                     temp = "";
                     
                 }
                 if(id.ID(temp)){
                     
-                    if(temp.equals("khlaa")){
-                    fileWriter.println("(khlaa , - , "+num + " )");
+                    if(temp.equals("khalaa")){
+                    fileWriter.println("(khalaa , - , "+num + " )");
                     temp = "";
                 }
                     if(temp.equals("eham")){
@@ -259,13 +263,13 @@ public class Lexical {
                if(i<line.length()){
                     
                     if(line.charAt(i)=='('){
-                        fileWriter.println("( ( , - , "+num+" )");
+                        fileWriter.println("( OB , - , "+num+" )");
                         temp = "";
                         i++;
                         continue;
                     }
                     if(line.charAt(i)==')'){
-                        fileWriter.println("( ) , - , "+num+" )");
+                        fileWriter.println("( CB , - , "+num+" )");
                         temp = "";
                         i++;
                         continue;
@@ -377,7 +381,7 @@ public class Lexical {
                         i++;
                         }
                         else{
-                            fileWriter.println("(! , - , "+num+" )");
+                            fileWriter.println("(NOT , ! , "+num+" )");
                         }
                         continue;
                     }
@@ -398,7 +402,7 @@ public class Lexical {
                         temp = "";
                         i++;
                         if(line.charAt(i)=='|'){
-                        fileWriter.println("(OR , += , "+num+" )");
+                        fileWriter.println("(|| , - , "+num+" )");
                         i++;
                         }
                         else{
@@ -439,7 +443,7 @@ public class Lexical {
                         i++;
                         }
                         else{
-                            fileWriter.println("(*, - , "+num+" )");
+                            fileWriter.println("(DIVMUL, - , "+num+" )");
                         }
                         continue;
                     }
@@ -451,11 +455,10 @@ public class Lexical {
                         i++;
                         }
                         else if(line.charAt(i)=='/'){
-                            
                             break;
                         }
                         else{
-                            fileWriter.println("(DIVMOD , / , "+num+" )");
+                            fileWriter.println("(DIVMUL , / , "+num+" )");
                         }
                         continue;
                     }
@@ -466,7 +469,7 @@ public class Lexical {
                         i++;
                         }
                         else{
-                            fileWriter.println("(DIVMOD , % , "+num+" )");
+                            fileWriter.println("(MOD , % , "+num+" )");
                         }
                         continue;
                     }
@@ -513,32 +516,17 @@ public class Lexical {
             temp ="";
             num++;
         }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         //End of Program
         fileWriter.close();
-        bolReader.close();
-        
-//        
+        bolReader.close(); 
     }
     
     static boolean has(String temp){
         char[] t = temp.toCharArray();
         for(int j =0;j<temp.length() ; j++){
-                     
-        if(t[j]=='.'){
-            return true;
-        }
+            if(t[j]=='.'){
+                return true;
+            }
         }
         return false;
     }
