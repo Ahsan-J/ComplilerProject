@@ -46,7 +46,7 @@ public class Lexical {
                               fileWriter.println("(floatConst ,"+temp+" , "+num + " )");
                               temp = "";
                                i++;
-                               continue;
+                              // continue;
                             }
                             }
                             if(i<line.length()-1&&line.charAt(i+1)>='0'&&line.charAt(i+1)<='9'){

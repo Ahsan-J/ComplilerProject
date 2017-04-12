@@ -94,12 +94,13 @@ public class Syntax {
                                 System.out.println("Build Success");
                                 System.exit(0);
                             }
+//                            System.out.println(TS[i]);
                         }
                     }
                 }
                 
         System.err.println("Build Unsuccess");
-//        System.out.println(TS[i]);
+        System.out.println(TS[i]);
                 
     }
     public static boolean S_st(){
@@ -219,7 +220,7 @@ public class Syntax {
         }
         return true;
     }
-    public static boolean M_st(){
+    public static boolean M_st()  {
         if(S_st()){
             return M_st();
         }
@@ -249,8 +250,6 @@ public class Syntax {
                     value += TS[i].ValuePart;
                     i++;
                     if(arr()){
-                        value+= TS[i].ValuePart;
-                        i++;
                         if(TS[i].ClassPart.equalsIgnoreCase("ID")){
                             value+=TS[i].ValuePart;
                             i++;
@@ -369,23 +368,64 @@ public class Syntax {
     }
     public static boolean naqsha(){
         if(TS[i].ClassPart.equalsIgnoreCase("AccMod")){
+            value+= TS[i].ValuePart;
+            i++;
+        }
+        if(TS[i].ClassPart.equalsIgnoreCase("aakhri")){
+            value += TS[i].ValuePart;
             i++;
         }
         if(TS[i].ClassPart.equalsIgnoreCase("sakin")){
+            value += TS[i].ValuePart;
             i++;
         }
         if(TS[i].ClassPart.equalsIgnoreCase("naqsha")){
             i++;
             if(TS[i].ClassPart.equalsIgnoreCase("ID")){
                 i++;
+                if(TS[i].ClassPart.equalsIgnoreCase("barhao")){
+                    i++;
+                    if(TS[i].ClassPart.equalsIgnoreCase("ID")){
+                        i++;
+                    }
+                    else{
+                        return false;
+                    }
+                }
                 if(TS[i].ClassPart.equalsIgnoreCase("{")){
-                    if(body()){
+                    if(class_body()){
                         return true;
                     }
                 }
             }
         }
         return false;
+    }
+    public static boolean class_body(){
+        if(TS[i].ClassPart.equalsIgnoreCase("AccMod")){
+            value+= TS[i].ValuePart;
+            i++;
+        }
+        if(TS[i].ClassPart.equalsIgnoreCase("aakhri")){
+            value+= TS[i].ValuePart;
+            i++;
+        }
+        if(TS[i].ClassPart.equalsIgnoreCase("sakin")){
+            value+= TS[i].ValuePart;
+            i++;
+        }
+        if(TS[i].ClassPart.equalsIgnoreCase("DT")||TS[i].ClassPart.equalsIgnoreCase("ID")){
+            if(decl()){
+                return class_body();
+            }
+            else if(func_defs()){
+                return class_body();
+            }
+        }
+        return true;
+    }
+    public static boolean DT(){
+        return (TS[i].ClassPart.equalsIgnoreCase("DT")||TS[i].ClassPart.equalsIgnoreCase("khlaa")||TS[i].ClassPart.equalsIgnoreCase("ID"));
     }
     public static boolean Exp(){
         if(TS[i].ClassPart.equalsIgnoreCase("INCDEC")||TS[i].ClassPart.equalsIgnoreCase("OB")||TS[i].ClassPart.equalsIgnoreCase("NOT")||TS[i].ClassPart.equalsIgnoreCase("ID")||TS[i].ClassPart.equalsIgnoreCase("intConst")||TS[i].ClassPart.equalsIgnoreCase("floatConst")||TS[i].ClassPart.equalsIgnoreCase("stringConst")||TS[i].ClassPart.equalsIgnoreCase("charConst")){
@@ -545,6 +585,203 @@ public class Syntax {
         return true;
     }
     public static boolean func_call(){
+        if(TS[i].ClassPart.equalsIgnoreCase("ID")){
+            value+=TS[i].ValuePart;
+            i++;
+            if(TS[i].ClassPart.equalsIgnoreCase("OB")){
+                value+=TS[i].ValuePart;
+                i++;
+                if(args()){
+                    if(TS[i].ClassPart.equalsIgnoreCase("CB")){
+                        value+=TS[i].ValuePart;
+                        i++;
+                        if(TS[i].ClassPart.equalsIgnoreCase(";")){
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    public static boolean args(){
+        if(Exp()){
+            return N1();
+        }
+        return true;
+    }
+    public static boolean N1(){
+        if(TS[i].ClassPart.equalsIgnoreCase(",")){
+            value+=TS[i].ValuePart;
+            i++;
+            if(Exp()){
+                return N1();
+            }
+        }
+        return true;
+    }
+    public static boolean Obj(){
+        if(TS[i].ClassPart.equalsIgnoreCase("ID")){
+            value+= TS[i].ValuePart;
+            i++;
+            if(TS[i].ClassPart.equalsIgnoreCase("ID")){
+                value+= TS[i].ValuePart;
+                i++;
+                if(TS[i].ClassPart.equalsIgnoreCase("=")){
+                    value+= TS[i].ValuePart;
+                    i++;
+                    if(TS[i].ClassPart.equalsIgnoreCase("naya")){
+                        value+= TS[i].ValuePart;
+                        i++;
+                        if(TS[i].ClassPart.equalsIgnoreCase("ID")){
+                            value+= TS[i].ValuePart;
+                            i++;
+                            if(TS[i].ClassPart.equalsIgnoreCase("OB")){
+                                value+= TS[i].ValuePart;
+                                i++;
+                                if(param()){
+                                    if(TS[i].ClassPart.equalsIgnoreCase("CB")){
+                                        value += TS[i].ValuePart;
+                                        i++;
+                                        if(TS[i].ClassPart.equalsIgnoreCase(";")){
+                                            value += TS[i].ValuePart;
+                                            i++;
+                                            return true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    public static boolean func_defs(){
+        if(TS[i].ClassPart.equalsIgnoreCase("DT")||TS[i].ClassPart.equalsIgnoreCase("ID")||TS[i].ClassPart.equalsIgnoreCase("khlaa")){
+            value+= TS[i].ValuePart;
+            i++;
+            if(TS[i].ClassPart.equalsIgnoreCase("ID")){
+                value+=TS[i].ValuePart;
+                i++;
+                if(TS[i].ClassPart.equalsIgnoreCase("OB")){
+                    value+=TS[i].ValuePart;
+                    i++;
+                    if(param()){
+                        value+=TS[i].ValuePart;
+                        i++;
+                        if(TS[i].ClassPart.equalsIgnoreCase("CB")){
+                            value+= TS[i].ValuePart;
+                            i++;
+                            if(TS[i].ClassPart.equalsIgnoreCase("{")){
+                                value+= TS[i].ValuePart;
+                                i++;
+                                if(M_st()){
+                                    if(TS[i].ClassPart.equalsIgnoreCase("}")){
+                                        value+= TS[i].ValuePart;
+                                        i++;
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else{
+                if(TS[i].ClassPart.equalsIgnoreCase("[")){
+                    value += TS[i].ValuePart;
+                    i++;
+                    if(TS[i].ClassPart.equalsIgnoreCase("]")){
+                        value += TS[i].ValuePart;
+                        i++;
+                        if(arr()){
+                            if(TS[i].ClassPart.equalsIgnoreCase("ID")){
+                                value += TS[i].ValuePart;
+                                i++;
+                                if(TS[i].ClassPart.equalsIgnoreCase("OB")){
+                                    value+=TS[i].ValuePart;
+                                    i++;
+                                    if(param()){
+                                        value+=TS[i].ValuePart;
+                                        i++;
+                                        if(TS[i].ClassPart.equalsIgnoreCase("CB")){
+                                            value+= TS[i].ValuePart;
+                                            i++;
+                                            if(TS[i].ClassPart.equalsIgnoreCase("{"))
+                                                value+= TS[i].ValuePart;
+                                                i++;
+                                                if(M_st()){
+                                                    if(TS[i].ClassPart.equalsIgnoreCase("}")){
+                                                        value+= TS[i].ValuePart;
+                                                        i++;
+                                                        return true;
+                                                    }
+                                                }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    public static boolean param(){
+        if(TS[i].ClassPart.equalsIgnoreCase("DT")||TS[i].ClassPart.equalsIgnoreCase("ID")){
+            value+=TS[i].ValuePart;
+            i++;
+            if(TS[i].ClassPart.equalsIgnoreCase("ID")){
+                value+=TS[i].ValuePart;
+                i++;
+                return next();
+            }
+            else if(TS[i].ClassPart.equalsIgnoreCase("[")){
+                value+=TS[i].ValuePart;
+                i++;
+                if(TS[i].ClassPart.equalsIgnoreCase("]")){
+                    value+=TS[i].ValuePart;
+                    i++;
+                    if(TS[i].ClassPart.equalsIgnoreCase("ID")){
+                        value+=TS[i].ValuePart;
+                        i++;
+                        return next();                            
+                    }
+                }
+            }
+        }
+        return true;
+    }
+    public static boolean next(){
+        if(TS[i].ClassPart.equalsIgnoreCase(",")){
+            value+=TS[i].ValuePart;
+            i++;
+            if(TS[i].ClassPart.equalsIgnoreCase("ID")||TS[i].ClassPart.equalsIgnoreCase("DT")){
+                value+=TS[i].ValuePart;
+                i++;
+                if(TS[i].ClassPart.equalsIgnoreCase("ID")){
+                    return next();
+                }
+                else{
+                    if(TS[i].ClassPart.equalsIgnoreCase("[")){
+                        value+=TS[i].ValuePart;
+                        i++;
+                        if(TS[i].ClassPart.equalsIgnoreCase("]")){
+                            value+=TS[i].ValuePart;
+                            i++;
+                            if(TS[i].ClassPart.equalsIgnoreCase("ID")){
+                                value+=TS[i].ValuePart;
+                                i++;
+                                return next();
+                            }
+                        } 
+                    }
+                }
+            }
+        }
         return true;
     }
     public static boolean arr(){
@@ -587,11 +824,11 @@ public class Syntax {
         return true;
     }
     public static boolean init1(){
-        if(TS[i].ClassPart.equalsIgnoreCase("ID")){
-            i++;
-            return init();
-        }
-        else if(Exp()){
+//        if(TS[i].ClassPart.equalsIgnoreCase("ID")){
+//            i++;
+//            return init();
+//        }
+        if(Exp()){
             return true;
         }
         return false;
