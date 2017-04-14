@@ -142,7 +142,7 @@ public class Lexical {
                     if(temp.equals("khalaa")){
                     fileWriter.println("(khalaa , - , "+num + " )");
                     temp = "";
-                }
+                    }
                     if(temp.equals("eham")){
                         fileWriter.println("(eham , - , "+num+" )");
                         temp = "";

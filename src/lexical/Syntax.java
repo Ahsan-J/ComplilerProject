@@ -79,38 +79,66 @@ public class Syntax {
     }
     
     static int i=0;
-    static Tokens [] TS;   
+    static Tokens [] TS;
     static String value = new String();
     
     public static void Start() throws FileNotFoundException{
         TS = getTokens();
-                if(TS[i].ClassPart.equalsIgnoreCase("shuru")){
-                    i++;
-                    if(TS[i].ClassPart.equalsIgnoreCase(":")){
-                        i++;
-                        if(body()){                 
-                            i++;
-                            if(TS[i].ClassPart.equalsIgnoreCase("khatam")){
-                                System.out.println("Build Success");
-                                System.exit(0);
-                            }
-//                            System.out.println(TS[i]);
-                        }
+        if(naqsha()){
+            System.out.println(value);
+            value="";
+        }
+        if(TS[i].ClassPart.equalsIgnoreCase("shuru")){
+            i++;
+            if(TS[i].ClassPart.equalsIgnoreCase(":")){
+                i++;
+                if(body()){                 
+                    if(TS[i].ClassPart.equalsIgnoreCase("khatam")){
+                        System.out.println("Build Success");
+                        System.exit(0);
                     }
+//                            System.out.println(TS[i]);
                 }
+            }
+        }
                 
         System.err.println("Build Unsuccess");
-        System.out.println(TS[i]);
-                
+        System.out.println(TS[i]);    
     }
     public static boolean S_st(){
         if(TS[i].ClassPart.equalsIgnoreCase("DT")||TS[i].ClassPart.equalsIgnoreCase("ID")){
+            value+=TS[i].ValuePart;
+            i++;
             if(decl()){
                 System.out.println(value + " Declared");
                 value = "";
                 return true;
             }
             else if(arr_decl()){
+                System.out.println(value + " Declared");
+                value = "";
+                return true;
+            }
+            else if(func_defs()){
+                System.out.println(value + " Declared");
+                value = "";
+                return true;
+            }
+            else if(TS[i-1].ClassPart.equalsIgnoreCase("ID")){
+                if(func_call()){
+                    System.out.println(value + " Declared");
+                    value = "";
+                    return true;
+                }
+                else if(Obj()){
+                    System.out.println(value + " Declared");
+                    value = "";
+                    return true;
+                }
+            }
+        }
+        else if(TS[i].ClassPart.equalsIgnoreCase("khlaa")){
+            if(func_defs()){
                 System.out.println(value + " Declared");
                 value = "";
                 return true;
@@ -137,8 +165,10 @@ public class Syntax {
                 return true;
             }
         }
-        else if(TS[i].ClassPart.equalsIgnoreCase("")){
-            
+        else if(naqsha()){
+            System.out.println(value);
+            value="";
+            return true;
         }
         return false;
     }
@@ -147,8 +177,6 @@ public class Syntax {
             value += TS[i].ValuePart;
             i++;
             if(body()){
-                value += TS[i].ValuePart;
-                i++;
                 if(TS[i].ClassPart.equalsIgnoreCase("jbtk")){
                     value += TS[i].ValuePart;
                     i++;
@@ -202,8 +230,6 @@ public class Syntax {
                         value+=TS[i].ValuePart;
                         i++;
                         if(body()){
-                            value+=TS[i].ValuePart;
-                            i++;
                             return warna();
                         }
                     }
@@ -228,9 +254,12 @@ public class Syntax {
     }
     public static boolean body(){
         if(TS[i].ClassPart.equalsIgnoreCase("{")){
+            value+=TS[i].ValuePart;
             i++;
             if(M_st()){
                 if(TS[i].ClassPart.equalsIgnoreCase("}")){
+                    value+=TS[i].ValuePart;
+                    i++;
                     return true;
                 }
             }
@@ -240,9 +269,7 @@ public class Syntax {
         return S_st();
     }
     public static boolean arr_decl(){
-        if(TS[i].ClassPart.equalsIgnoreCase("DT")){
-            value += TS[i].ValuePart;
-            i++;
+        if(TS[i-1].ClassPart.equalsIgnoreCase("DT")){
             if(TS[i].ClassPart.equalsIgnoreCase("[")){
                 value += TS[i].ValuePart;
                 i++;
@@ -292,9 +319,7 @@ public class Syntax {
                 }
             }
         }
-        else if(TS[i].ClassPart.equalsIgnoreCase("ID")){
-            value += TS[i].ValuePart;
-            i++;
+        else if(TS[i-1].ClassPart.equalsIgnoreCase("ID")){
             if(TS[i].ClassPart.equalsIgnoreCase("[")){
                 value += TS[i].ValuePart;
                 i++;
@@ -423,9 +448,6 @@ public class Syntax {
             }
         }
         return true;
-    }
-    public static boolean DT(){
-        return (TS[i].ClassPart.equalsIgnoreCase("DT")||TS[i].ClassPart.equalsIgnoreCase("khlaa")||TS[i].ClassPart.equalsIgnoreCase("ID"));
     }
     public static boolean Exp(){
         if(TS[i].ClassPart.equalsIgnoreCase("INCDEC")||TS[i].ClassPart.equalsIgnoreCase("OB")||TS[i].ClassPart.equalsIgnoreCase("NOT")||TS[i].ClassPart.equalsIgnoreCase("ID")||TS[i].ClassPart.equalsIgnoreCase("intConst")||TS[i].ClassPart.equalsIgnoreCase("floatConst")||TS[i].ClassPart.equalsIgnoreCase("stringConst")||TS[i].ClassPart.equalsIgnoreCase("charConst")){
@@ -585,9 +607,7 @@ public class Syntax {
         return true;
     }
     public static boolean func_call(){
-        if(TS[i].ClassPart.equalsIgnoreCase("ID")){
-            value+=TS[i].ValuePart;
-            i++;
+        if(TS[i-1].ClassPart.equalsIgnoreCase("ID")){
             if(TS[i].ClassPart.equalsIgnoreCase("OB")){
                 value+=TS[i].ValuePart;
                 i++;
@@ -596,6 +616,8 @@ public class Syntax {
                         value+=TS[i].ValuePart;
                         i++;
                         if(TS[i].ClassPart.equalsIgnoreCase(";")){
+                            value+=TS[i].ValuePart;
+                            i++;
                             return true;
                         }
                     }
@@ -611,7 +633,7 @@ public class Syntax {
         return true;
     }
     public static boolean N1(){
-        if(TS[i].ClassPart.equalsIgnoreCase(",")){
+        if(TS[i].ClassPart.equalsIgnoreCase("comma")){
             value+=TS[i].ValuePart;
             i++;
             if(Exp()){
@@ -621,9 +643,8 @@ public class Syntax {
         return true;
     }
     public static boolean Obj(){
-        if(TS[i].ClassPart.equalsIgnoreCase("ID")){
-            value+= TS[i].ValuePart;
-            i++;
+        if(TS[i-1].ClassPart.equalsIgnoreCase("ID")){
+            
             if(TS[i].ClassPart.equalsIgnoreCase("ID")){
                 value+= TS[i].ValuePart;
                 i++;
@@ -659,9 +680,7 @@ public class Syntax {
         return false;
     }
     public static boolean func_defs(){
-        if(TS[i].ClassPart.equalsIgnoreCase("DT")||TS[i].ClassPart.equalsIgnoreCase("ID")||TS[i].ClassPart.equalsIgnoreCase("khlaa")){
-            value+= TS[i].ValuePart;
-            i++;
+        if(TS[i-1].ClassPart.equalsIgnoreCase("DT")||TS[i-1].ClassPart.equalsIgnoreCase("ID")||TS[i-1].ClassPart.equalsIgnoreCase("khlaa")){
             if(TS[i].ClassPart.equalsIgnoreCase("ID")){
                 value+=TS[i].ValuePart;
                 i++;
@@ -756,7 +775,7 @@ public class Syntax {
         return true;
     }
     public static boolean next(){
-        if(TS[i].ClassPart.equalsIgnoreCase(",")){
+        if(TS[i].ClassPart.equalsIgnoreCase("comma")){
             value+=TS[i].ValuePart;
             i++;
             if(TS[i].ClassPart.equalsIgnoreCase("ID")||TS[i].ClassPart.equalsIgnoreCase("DT")){
@@ -798,9 +817,7 @@ public class Syntax {
         return true;
     }
     public static boolean decl(){
-        if(TS[i].ClassPart.equalsIgnoreCase("DT")){    
-            value += TS[i].ValuePart;
-            i++;
+        if(TS[i-1].ClassPart.equalsIgnoreCase("DT")){    
             if(TS[i].ClassPart.equalsIgnoreCase("ID")){
                 value += TS[i].ValuePart;
                 i++;
