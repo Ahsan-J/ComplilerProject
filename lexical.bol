@@ -1,3 +1,1 @@
-shuru:{
-print(a,b);
-}khatam
+shuru:{int a=23+34,b,c,a;}khatam

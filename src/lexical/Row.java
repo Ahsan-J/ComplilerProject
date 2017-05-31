@@ -5,16 +5,20 @@
  */
 package lexical;
 
-import java.io.IOException;
+import java.util.Stack;
 
 /**
  *
  * @author Xcalaiberz
  */
-public class ProgramMain {
-    public static void main(String[] args) throws IOException{
-        Lexical.Start(); //Phase one
-        Syntax.Start();  //Phase two
-        Semantic.Start(); //Phase Three
+public class Row {
+        String Type;
+        String Name;
+        Stack<String> scope;
+    
+    public Row(String n,String t,Stack<String> s){
+        this.Type=t;
+        this.Name=n;
+        this.scope=s;
     }
 }

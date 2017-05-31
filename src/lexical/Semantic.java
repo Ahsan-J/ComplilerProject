@@ -8,86 +8,56 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Scanner;
+import java.util.Stack;
 /**
  *
  * @author Xcalaiberz
  */
-public class Syntax {
-    public static Tokens[] getTokens(){
-        int filesize=0;
-        String filename = "lexical_output.txt";
-        Tokens[] TS=null;
-        try{
-        Scanner reader = new Scanner (new BufferedReader (new FileReader(filename)));
-        String Line = null;
-        while(reader.hasNext()){
-            Line = reader.nextLine();
-            Line = Line.trim();
-            if(Line.charAt(0)=='('){
-            filesize++;
-            }
-            else{
-                System.out.println(Line);
-            }
-        }
-        reader.close();
-        }
-        catch(Exception e){
-            System.err.println("File Not Found \nError Says"+e.getMessage());
-        }
-        TS = new Tokens[filesize];
-        try{
-            String Line = null;
-            Scanner reader = new Scanner (new BufferedReader (new FileReader(filename)));
-            int indexSize=0;
-            while(reader.hasNext()){
-                Line = reader.nextLine();
-                Line.trim();
-                if(Line.charAt(0)=='('){
-                    Line = Line.replace('(', ' ');
-                    Line = Line.replace(')', ' ');
-                    Line = Line.trim();
-                    String [] TokenParts = Line.split(",");
-                    for(int k=0;k<TokenParts.length;k++){
-                        TokenParts[k]=TokenParts[k].trim();
-                    }
-                    if(TokenParts[1].equalsIgnoreCase("-")){
-                        TokenParts[1]=TokenParts[0];
-                    }
-                    TS[indexSize++]=new Tokens(TokenParts[0],TokenParts[1],Integer.valueOf(TokenParts[2]));
-                }
-            }
-        }
-        catch(Exception e){
-            e.printStackTrace();
-//            System.err.println("Problems at the Tokens or "+ e.getMessage());
-        }
-        return TS;
-    }
-    public static Tokens[] returnTokens(){
-        return TS;
-    }
+public class Semantic {
     
+    static Stack<Row> Table = new Stack<Row>();
+    static int ScopeIndex=0;
     static int i=0;
     static Tokens [] TS;
     static String value = new String();
+    static Stack<String> scope = new Stack<String>();
+    
+    public static String lookup(String n,Stack<String> s){
+        if(!Table.empty()){
+        for(int q=0;q<Table.size();q++){
+            if(n.equals(Table.elementAt(q).Name)){
+                Object a[] = Table.elementAt(q).scope.toArray();
+                Object var = s.peek();
+                for(int p=0;p<a.length;p++){
+                    if(var.equals(a[p])){
+                        return Table.elementAt(q).Type;
+                    }
+                }
+            }
+        }
+        }
+            return "null";
+        
+    }
     
     public static boolean Start() throws FileNotFoundException{
-        TS = getTokens();
+        TS = Syntax.returnTokens();
+        
         if(naqsha()){
 //            System.out.println(value);
             value="";
         }
         if(TS[i].ClassPart.equalsIgnoreCase("shuru")){
             i++;
+            scope.push("S"+ScopeIndex++);
             if(TS[i].ClassPart.equalsIgnoreCase(":")){
                 i++;
                 if(body()){                 
                     if(TS[i].ClassPart.equalsIgnoreCase("khatam")){
                         System.out.println("Build Success");
+                        scope.pop();
                         return true;
                     }
-//                            System.out.println(TS[i]);
                 }
             }
         }
@@ -284,7 +254,7 @@ public class Syntax {
                                             value+=TS[i].ValuePart;
                                             i++;
                                             if(TS[i].ClassPart.equalsIgnoreCase(";")){
-//                                                System.out.println(value + " Declared");
+                                                System.out.println(value + " Declared");
                                                 value = "";
                                                 return true;
                                             }
@@ -418,6 +388,7 @@ public class Syntax {
         return false;
     }
     public static boolean class_body(){
+//        scope.push("S"+ScopeIndex);
         if(TS[i].ClassPart.equalsIgnoreCase("AccMod")){
             value+= TS[i].ValuePart;
             i++;
@@ -808,12 +779,21 @@ public class Syntax {
         return true;
     }
     public static boolean decl(){
-        if(TS[i-1].ClassPart.equalsIgnoreCase("DT")){    
+        if(TS[i-1].ClassPart.equalsIgnoreCase("DT")){
+            String type = TS[i-1].ValuePart;
             if(TS[i].ClassPart.equalsIgnoreCase("ID")){
                 value += TS[i].ValuePart;
+                String Name = TS[i].ValuePart;
+                if(lookup(Name,scope).equals("null")){
+                    Table.push(new Row(Name,type,scope));
+                    System.out.println("Declared "+Name);
+                }
+                else{
+                    System.out.println("Redeclaration Error");
+                }
                 i++;
-                if(init()){
-                    if(list()){
+                if(init(type)){
+                    if(list(type)){
                         value += TS[i].ValuePart;
                         i++;
                         return true;
@@ -823,26 +803,34 @@ public class Syntax {
         }
         return false;
     }
-    public static boolean init(){
+    public static boolean init(String Type){
         if(TS[i].ClassPart.equalsIgnoreCase("=")){
             value += TS[i].ValuePart;
             i++;
             if(Exp()){
                 return true;
             }
-                return false;
-            }
+            return false;
+        }
         return true;
     }
-    public static boolean list(){
+    public static boolean list(String Type){
         if(TS[i].ClassPart.equalsIgnoreCase("comma")){
             value += TS[i].ValuePart;
             i++;
             if(TS[i].ClassPart.equalsIgnoreCase("ID")){
                 value += TS[i].ValuePart;
+                String Name = TS[i].ValuePart;
+                if(lookup(Name,scope).equals("null")){
+                    Table.push(new Row(Name,Type,scope));
+                    System.out.println("Declared "+Name);
+                }
+                else{
+                    System.out.println("Redeclaration Error");
+                }
                 i++;
-                if(init()){
-                    return list();
+                if(init(Type)){
+                    return list(Type);
                 }
             }
         }
