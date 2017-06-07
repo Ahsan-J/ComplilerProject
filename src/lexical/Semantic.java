@@ -15,31 +15,61 @@ import java.util.Stack;
  */
 public class Semantic {
     
-    static Stack<Row> Table = new Stack<Row>();
+    static Stack<Row> varTable = new Stack<Row>();
+    static Stack<ArrRow> arrTable = new Stack<ArrRow>();
+    static Stack<FuncRow> funcTable = new Stack<FuncRow>();
+    static Stack<ClassRow> ClassTable = new Stack<ClassRow>();
+    
     static int ScopeIndex=0;
     static int i=0;
     static Tokens [] TS;
-    static String value = new String();
+    static String value,FinalList = new String();
     static Stack<String> scope = new Stack<String>();
     
-    public static String lookup(String n,Stack<String> s){
-        if(!Table.empty()){
-        for(int q=0;q<Table.size();q++){
-            if(n.equals(Table.elementAt(q).Name)){
-                Object a[] = Table.elementAt(q).scope.toArray();
+    public static String varlookup(String n,Stack<String> s){
+        if(!varTable.empty()){
+        for(int q=0;q<varTable.size();q++){
+            if(n.equals(varTable.elementAt(q).Name)){
+                Object a[] = varTable.elementAt(q).scope.toArray();
                 Object var = s.peek();
                 for(int p=0;p<a.length;p++){
                     if(var.equals(a[p])){
-                        return Table.elementAt(q).Type;
+                        return varTable.elementAt(q).Type;
                     }
                 }
             }
         }
         }
             return "null";
-        
     }
-    
+    public static String funclookup(String n,String s){
+        if(!funcTable.empty()){
+            for(int q=0;q<funcTable.size();q++){
+                if(n.equals(funcTable.elementAt(q).Name)){
+                    if(s.equalsIgnoreCase(funcTable.elementAt(q).ParamList)){
+                        return funcTable.elementAt(q).ReturnType;
+                    }
+                }
+            }
+        }
+            return "null";
+    }
+    public static String arrlookup(String n,Stack<String> s){
+        if(!varTable.empty()){
+        for(int q=0;q<varTable.size();q++){
+            if(n.equals(varTable.elementAt(q).Name)){
+                Object a[] = varTable.elementAt(q).scope.toArray();
+                Object var = s.peek();
+                for(int p=0;p<a.length;p++){
+                    if(var.equals(a[p])){
+                        return varTable.elementAt(q).Type;
+                    }
+                }
+            }
+        }
+        }
+            return "null";    
+    }
     public static boolean Start() throws FileNotFoundException{
         TS = Syntax.returnTokens();
         
@@ -80,11 +110,11 @@ public class Semantic {
                 value = "";
                 return true;
             }
-            else if(func_defs()){
-//                System.out.println(value + " Declared");
-                value = "";
-                return true;
-            }
+//            else if(func_defs()){
+////                System.out.println(value + " Declared");
+//                value = "";
+//                return true;
+//            }
             else if(TS[i-1].ClassPart.equalsIgnoreCase("ID")){
                 if(func_call()){
 //                    System.out.println(value + " Declared");
@@ -214,23 +244,32 @@ public class Semantic {
         return true;
     }
     public static boolean body(){
+        scope.push("S"+ScopeIndex++);
         if(TS[i].ClassPart.equalsIgnoreCase("{")){
             value+=TS[i].ValuePart;
             i++;
+            
             if(M_st()){
                 if(TS[i].ClassPart.equalsIgnoreCase("}")){
                     value+=TS[i].ValuePart;
                     i++;
+                    scope.pop();
                     return true;
                 }
             }
 //            System.out.println(TS[i]);
+            scope.pop();
             return false;
         }
-        return S_st();
+        if( S_st()){
+            scope.pop();
+            return true;
+        }
+        return false;
     }
     public static boolean arr_decl(){
         if(TS[i-1].ClassPart.equalsIgnoreCase("DT")){
+            String Type = TS[i-1].ValuePart;
             if(TS[i].ClassPart.equalsIgnoreCase("[")){
                 value += TS[i].ValuePart;
                 i++;
@@ -240,8 +279,13 @@ public class Semantic {
                     if(arr()){
                         if(TS[i].ClassPart.equalsIgnoreCase("ID")){
                             value+=TS[i].ValuePart;
+                            String Name = TS[i].ValuePart;
+                            if(!arrlookup(Name,scope).equalsIgnoreCase("null")){
+                                System.out.println("Redeclaration Error");
+                                return false;
+                            }
                             i++;
-                            if(TS[i].ClassPart.equalsIgnoreCase("=")){
+                            if(TS[i].ClassPart.equalsIgnoreCase("=")){    
                                 value+=TS[i].ValuePart;
                                 i++;
                                 if(TS[i].ClassPart.equalsIgnoreCase("naya")){
@@ -249,9 +293,13 @@ public class Semantic {
                                     i++;
                                     if(TS[i].ClassPart.equalsIgnoreCase("DT")){
                                         value+=TS[i].ValuePart;
+                                        if(!Type.equalsIgnoreCase(TS[i].ValuePart)){
+                                            System.out.println("Type mismatch error at line " + TS[i].LineNumber);
+                                            return false;
+                                        }
                                         i++;
-                                        if(arr_init()){
-                                            value+=TS[i].ValuePart;
+                                        if(arr_init(Name,Type)){
+                                            value+=TS[i].ValuePart;                                            
                                             i++;
                                             if(TS[i].ClassPart.equalsIgnoreCase(";")){
                                                 System.out.println(value + " Declared");
@@ -268,6 +316,11 @@ public class Semantic {
             }
             else if(TS[i].ClassPart.equalsIgnoreCase("ID")){
                 value+=TS[i].ValuePart;
+                String Name = TS[i].ValuePart;
+                if(!arrlookup(Name,scope).equalsIgnoreCase("null")){
+                    System.out.println("Redeclaration Error");
+                    return false;
+                }
                 i++;
                 if(arr()){
                     value+=TS[i].ValuePart;
@@ -281,6 +334,7 @@ public class Semantic {
             }
         }
         else if(TS[i-1].ClassPart.equalsIgnoreCase("ID")){
+            String Type = TS[i-1].ValuePart;
             if(TS[i].ClassPart.equalsIgnoreCase("[")){
                 value += TS[i].ValuePart;
                 i++;
@@ -292,6 +346,11 @@ public class Semantic {
                         i++;
                         if(TS[i].ClassPart.equalsIgnoreCase("ID")){
                             value+=TS[i].ValuePart;
+                            String Name = TS[i].ValuePart;
+                            if(!arrlookup(Name,scope).equalsIgnoreCase("null")){
+                                System.out.println("Redeclaration Error");
+                                return false;
+                            }
                             i++;
                             if(TS[i].ClassPart.equalsIgnoreCase("=")){
                                 value+=TS[i].ValuePart;
@@ -301,8 +360,12 @@ public class Semantic {
                                     i++;
                                     if(TS[i].ClassPart.equalsIgnoreCase("ID")){
                                         value+=TS[i].ValuePart;
+                                        if(!Type.equalsIgnoreCase(TS[i].ValuePart)){
+                                            System.out.println("Type mismatch error at line " + TS[i].LineNumber);
+                                            return false;
+                                        }
                                         i++;
-                                        if(arr_init()){
+                                        if(arr_init(Name,Type)){
                                             value+=TS[i].ValuePart;
                                             i++;
                                             if(TS[i].ClassPart.equalsIgnoreCase(";")){
@@ -335,7 +398,7 @@ public class Semantic {
         
         return false;
     }
-    public static boolean arr_init(){
+    public static boolean arr_init(String Name,String Type){
         if(TS[i].ClassPart.equalsIgnoreCase("[")){
             value += TS[i].ValuePart;
             i++;
@@ -345,7 +408,7 @@ public class Semantic {
                 if(TS[i].ClassPart.equalsIgnoreCase("]")){
                     value+=TS[i].ValuePart;
                     i++;
-                    return arr_init();
+                    return arr_init(Name,Type);
                 }
             }
             return false;
@@ -570,10 +633,15 @@ public class Semantic {
     }
     public static boolean func_call(){
         if(TS[i-1].ClassPart.equalsIgnoreCase("ID")){
+            String Name = TS[i-1].ValuePart;
             if(TS[i].ClassPart.equalsIgnoreCase("OB")){
                 value+=TS[i].ValuePart;
                 i++;
                 if(args()){
+                    if(funclookup(Name, FinalList)==null){
+                        System.out.println("Function Not Defined");
+                        return false;
+                    }
                     if(TS[i].ClassPart.equalsIgnoreCase("CB")){
                         value+=TS[i].ValuePart;
                         i++;
@@ -641,15 +709,41 @@ public class Semantic {
         }
         return false;
     }
+    public static boolean var_defs(){
+        if(TS[i-1].ClassPart.equalsIgnoreCase("ID")){
+            String Name = TS[i-1].ValuePart;
+            if(varlookup(Name, scope)==null){
+                System.out.println("Var Not Defined");
+                return false;
+            }
+            if(TS[i].ClassPart.equalsIgnoreCase("=")){
+                i++;
+                if(Exp()){
+                    if(TS[i].ClassPart.equalsIgnoreCase(";")){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
     public static boolean func_defs(){
         if(TS[i-1].ClassPart.equalsIgnoreCase("DT")||TS[i-1].ClassPart.equalsIgnoreCase("ID")||TS[i-1].ClassPart.equalsIgnoreCase("khlaa")){
+            String ReturnType = TS[i-1].ValuePart;
             if(TS[i].ClassPart.equalsIgnoreCase("ID")){
                 value+=TS[i].ValuePart;
+                String Name = TS[i].ValuePart;
                 i++;
                 if(TS[i].ClassPart.equalsIgnoreCase("OB")){
                     value+=TS[i].ValuePart;
                     i++;
                     if(param()){
+                        if(funclookup(Name, FinalList)==null){
+                            funcTable.add(new FuncRow(Name,ReturnType+"->"+FinalList,scope));
+                        }
+                        else{
+                            System.out.println("Function Redeclaration Error");
+                        }
                         value+=TS[i].ValuePart;
                         i++;
                         if(TS[i].ClassPart.equalsIgnoreCase("CB")){
@@ -673,6 +767,7 @@ public class Semantic {
             else{
                 if(TS[i].ClassPart.equalsIgnoreCase("[")){
                     value += TS[i].ValuePart;
+                    String Name = TS[i].ValuePart;
                     i++;
                     if(TS[i].ClassPart.equalsIgnoreCase("]")){
                         value += TS[i].ValuePart;
@@ -685,6 +780,12 @@ public class Semantic {
                                     value+=TS[i].ValuePart;
                                     i++;
                                     if(param()){
+                                        if(funclookup(Name, FinalList)==null){
+                                        funcTable.add(new FuncRow(Name,ReturnType+"->"+FinalList,scope));
+                                        }
+                                        else{
+                                            System.out.println("Function Redeclaration Error");
+                                        }
                                         value+=TS[i].ValuePart;
                                         i++;
                                         if(TS[i].ClassPart.equalsIgnoreCase("CB")){
@@ -714,11 +815,12 @@ public class Semantic {
     public static boolean param(){
         if(TS[i].ClassPart.equalsIgnoreCase("DT")||TS[i].ClassPart.equalsIgnoreCase("ID")){
             value+=TS[i].ValuePart;
+            String ParamList = TS[i].ValuePart;
             i++;
             if(TS[i].ClassPart.equalsIgnoreCase("ID")){
                 value+=TS[i].ValuePart;
                 i++;
-                return next();
+                return next(ParamList);
             }
             else if(TS[i].ClassPart.equalsIgnoreCase("[")){
                 value+=TS[i].ValuePart;
@@ -729,14 +831,14 @@ public class Semantic {
                     if(TS[i].ClassPart.equalsIgnoreCase("ID")){
                         value+=TS[i].ValuePart;
                         i++;
-                        return next();                            
+                        return next(ParamList);                            
                     }
                 }
             }
         }
         return true;
     }
-    public static boolean next(){
+    public static boolean next(String ParamList){
         if(TS[i].ClassPart.equalsIgnoreCase("comma")){
             value+=TS[i].ValuePart;
             i++;
@@ -744,7 +846,8 @@ public class Semantic {
                 value+=TS[i].ValuePart;
                 i++;
                 if(TS[i].ClassPart.equalsIgnoreCase("ID")){
-                    return next();
+                    ParamList+=","+TS[i].ValuePart;
+                    return next(ParamList);
                 }
                 else{
                     if(TS[i].ClassPart.equalsIgnoreCase("[")){
@@ -756,13 +859,14 @@ public class Semantic {
                             if(TS[i].ClassPart.equalsIgnoreCase("ID")){
                                 value+=TS[i].ValuePart;
                                 i++;
-                                return next();
+                                return next(ParamList);
                             }
                         } 
                     }
                 }
             }
         }
+        FinalList=ParamList;
         return true;
     }
     public static boolean arr(){
@@ -784,12 +888,13 @@ public class Semantic {
             if(TS[i].ClassPart.equalsIgnoreCase("ID")){
                 value += TS[i].ValuePart;
                 String Name = TS[i].ValuePart;
-                if(lookup(Name,scope).equals("null")){
-                    Table.push(new Row(Name,type,scope));
+                if(varlookup(Name,scope).equals("null")){
+                    varTable.push(new Row(Name,type,scope));
                     System.out.println("Declared "+Name);
                 }
                 else{
                     System.out.println("Redeclaration Error");
+                    return false;
                 }
                 i++;
                 if(init(type)){
@@ -821,8 +926,8 @@ public class Semantic {
             if(TS[i].ClassPart.equalsIgnoreCase("ID")){
                 value += TS[i].ValuePart;
                 String Name = TS[i].ValuePart;
-                if(lookup(Name,scope).equals("null")){
-                    Table.push(new Row(Name,Type,scope));
+                if(varlookup(Name,scope).equals("null")){
+                    varTable.push(new Row(Name,Type,scope));
                     System.out.println("Declared "+Name);
                 }
                 else{

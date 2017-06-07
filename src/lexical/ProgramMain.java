@@ -14,7 +14,7 @@ import java.io.IOException;
 public class ProgramMain {
     public static void main(String[] args) throws IOException{
         Lexical.Start(); //Phase one
-        Syntax.Start();  //Phase two
+//        Syntax.Start();  //Phase two
         Semantic.Start(); //Phase Three
     }
 }
